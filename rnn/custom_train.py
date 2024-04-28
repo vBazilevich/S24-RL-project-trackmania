@@ -106,7 +106,8 @@ def mlp(sizes, activation, output_activation=nn.Identity):
     layers = []
     for j in range(len(sizes) - 1):
         act = activation if j < len(sizes) - 2 else output_activation
-        layers += [nn.Linear(sizes[j], sizes[j + 1]), act()]
+        do = nn.Dropout1d(0.15) if j < len(sizes) - 2 else nn.Identity()
+        layers += [nn.Linear(sizes[j], sizes[j + 1]), do, act()]
     return nn.Sequential(*layers)
 
 # Let us now define a module that will be the main building block of both our actor and critic:
@@ -123,14 +124,20 @@ class RNNNet(nn.Module):
 
         # Convolutional layers processing screenshots:
         self.conv1 = nn.Conv2d(cfg.IMG_HIST_LEN, 64, 5, groups=cfg.IMG_HIST_LEN, stride=2)
+        self.do1 = nn.Dropout2d(0.2)
         self.conv2 = nn.Conv2d(64, 64, 5, groups=cfg.IMG_HIST_LEN, stride=2)
+        self.do2 = nn.Dropout2d(0.15)
         self.conv3 = nn.Conv2d(64, 128, 3, groups=cfg.IMG_HIST_LEN, stride=2)
+        self.do3 = nn.Dropout2d(0.15)
         self.conv4 = nn.Conv2d(128, 128, 3, groups=cfg.IMG_HIST_LEN)
+        self.do4 = nn.Dropout2d(0.1)
         self.conv5 = nn.Conv2d(128, 128, 3, groups=cfg.IMG_HIST_LEN)
-        self.conv5 = nn.Conv2d(128, 16, 1, groups=cfg.IMG_HIST_LEN)
+        self.do5 = nn.Dropout2d(0.1)
+        self.conv6 = nn.Conv2d(128, 64, 1, groups=cfg.IMG_HIST_LEN)
+        self.do6 = nn.Dropout2d(0.1)
         self.flatten = nn.Flatten()
 
-        self.rnn = nn.LSTM(64, 32, num_layers=2, batch_first=True)
+        self.rnn = nn.LSTM(64, 32, num_layers=2, batch_first=True, dropout=0.1)
 
         # The MLP input will be formed of:
         # - the flattened RNN output
@@ -168,11 +175,12 @@ class RNNNet(nn.Module):
         # (note that the competition environment outputs histories of 4 images
         # and the default config outputs these as 64 x 64 greyscale,
         # we will stack these greyscale images along the channel dimension of our input tensor)
-        x = F.relu(self.conv1(images))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-        x = F.relu(self.conv4(x))
-        x = F.relu(self.conv5(x))
+        x = F.relu(self.do1(self.conv1(images)))
+        x = F.relu(self.do2(self.conv2(x)))
+        x = F.relu(self.do3(self.conv3(x)))
+        x = F.relu(self.do4(self.conv4(x)))
+        x = F.relu(self.do5(self.conv5(x)))
+        x = F.relu(self.do6(self.conv6(x)))
         x = x.reshape((-1, cfg.IMG_HIST_LEN, self.rnn.input_size))
         self.rnn.flatten_parameters()
         _, (x, _) = self.rnn(x)
