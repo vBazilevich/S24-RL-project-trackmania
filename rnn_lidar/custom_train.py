@@ -55,9 +55,6 @@ device_worker = 'cuda' if cfg.CUDA_INFERENCE else 'cpu'
 # =====================================================================
 window_width = cfg.WINDOW_WIDTH  # must be between 256 and 958
 window_height = cfg.WINDOW_HEIGHT  # must be between 128 and 488
-img_width = cfg.IMG_WIDTH
-img_height = cfg.IMG_HEIGHT
-img_grayscale = cfg.GRAYSCALE
 imgs_buf_len = cfg.IMG_HIST_LEN
 
 act_buf_len = cfg.ACT_BUF_LEN
@@ -552,11 +549,11 @@ class SACTrainingAgent(TrainingAgent):
 
 training_agent_cls = partial(SACTrainingAgent,
                              model_cls=RNNNetActorCritic,
-                             gamma=0.99,
+                             gamma=0.95,
                              polyak=0.995,
                              alpha=0.02,
-                             lr_actor=0.000005,
-                             lr_critic=0.00003)
+                             lr_actor=0.00005,
+                             lr_critic=0.0003)
 
 
 # =====================================================================
