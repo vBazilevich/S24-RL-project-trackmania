@@ -2,6 +2,12 @@
 *Hold on tight as we merge the high-octane world of car racing with the cutting-edge capabilities of Reinforcement Learning, creating an unstoppable force on the Trackmania race tracks*
 ...well, not as exciting as ChatGPT puts it, yet we found an idea of training RL algorithm on a real car racing game quite fascinating! We use a Steam version of Trackmania 2020 and [TMRL](https://github.com/trackmania-rl/tmrl) environment.
 
+Watch how our agent drives a track!
+
+https://github.com/vBazilevich/S24-RL-project-trackmania/assets/36306324/5bdc1034-3a9c-4d11-bf93-3376ba247b25
+
+
+
 ## How to reproduce the experiments?
 1.  `pip install -r requirements.txt`
 2.  Install TMRL environment on your [Windows](https://github.com/trackmania-rl/tmrl/blob/master/readme/Install.md) or [Linux](https://github.com/trackmania-rl/tmrl/blob/master/readme/install_linux.md) machine.
