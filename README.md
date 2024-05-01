@@ -6,7 +6,8 @@ Watch how our agent drives a track!
 
 https://github.com/vBazilevich/S24-RL-project-trackmania/assets/36306324/5bdc1034-3a9c-4d11-bf93-3376ba247b25
 
-
+## Project details
+In our project, we use simple ad-hoc driver along with complex RNN-based models in LIDAR and Image-based environments. For the full information, please consult the [project report](report_S24_RL_trackmania.pdf).
 
 ## How to reproduce the experiments?
 1.  `pip install -r requirements.txt`
